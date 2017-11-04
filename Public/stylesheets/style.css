@@ -1,0 +1,32 @@
+
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background-color: #F0F8FF;
+}
+
+h1 {
+	background-color: #FF6347; padding: 12px; margin:-50px; 
+	border: 30px; margin-bottom: 20px; text-align: center;
+}
+h2 {
+	background-color: 	#F5DEB3; margin-top: 20px;
+
+}
+a:link {
+    color: green; 
+    background-color: transparent; 
+    text-decoration: none;
+}
+
+a:hover {
+    color: red;
+    background-color: transparent;
+    text-decoration: underline;
+}
+
+a:active {
+    color: yellow;
+    background-color: transparent;
+    text-decoration: underline;
+}
