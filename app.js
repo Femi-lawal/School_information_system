@@ -86,7 +86,7 @@ app.post('/users/add', function(req, res){
 		courses_offered: req.body.courses_offered
 	}
 
-db.users.insert(newUser, function(err, reult){
+db.users.insert(newUser, function(err, result){
 	if(err){
 		console.log(err);
 			}
@@ -95,6 +95,15 @@ db.users.insert(newUser, function(err, reult){
 });
 }
 });
+});
+
+app.put('/users/update/:id', function(req, res){
+	db.users.update({_id: ObjectId(req.params.id)}, function(err, result){
+		if(err){
+			console.log(err);
+		}
+		res.redirect('/');
+	});
 });
 app.delete('/users/delete/:id', function(req, res){
 	db.users.remove({_id: ObjectId(req.params.id)}, function(err, result){
