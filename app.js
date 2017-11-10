@@ -1,21 +1,12 @@
-var express = require('express');
-var bodyParser = require('body-parser');
-var path = require('path');
-var expressValidator = require('express-validator');
-var mongojs = require('mongojs');
-var db = mongojs('schoolapp', ['users']);
-var ObjectId = mongojs.ObjectId;
+const express = require('express');
+const bodyParser = require('body-parser');
+const path = require('path');
+const expressValidator = require('express-validator');
+const mongojs = require('mongojs');
+const db = mongojs('schoolapp', ['users']);
+const ObjectId = mongojs.ObjectId;
 
-var app = express();
-
-/*
-var logger = function(req, res, next){
-	console.log('logging...');
-	next();
-}
-
-app.use(logger);*/
-
+const app = express();
 
 // View Engine
 app.set('view engine', 'ejs');
@@ -28,7 +19,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 // Set Static Path
 app.use(express.static(path.join(__dirname, 'public')))
 
-// Global Vars
+// Global Consts
 app.use(function(req, res, next){
 	res.locals.errors = null;
 	next();
@@ -37,7 +28,7 @@ app.use(function(req, res, next){
 // Express Validator Middleware
 app.use(expressValidator({
   errorFormatter: function(param, msg, value) {
-      var namespace = param.split('.')
+      const namespace = param.split('.')
       , root    = namespace.shift()
       , formParam = root;
 
@@ -51,29 +42,6 @@ app.use(expressValidator({
     };
    }
 }));
-
-var users = [{
-	first_name:'Jeff',
-    last_name:'Aro',
-    matric_number:'130813030',
-    level:'200',
-    email:'jeffaro@gmail.com'
-    }, 
-    {
-	first_name:'Taiwo',
-    last_name:'Giwa',
-    matric_number:'130813031',
-    level:'200',
-    email:'taiwogiwa@gmail.com'
-    },
-    {
-	first_name:'Emeka',
-    last_name:'Uzor',
-    matric_number:'120813032',
-    level:'300',
-    email:'emekauzor@gmail.com'
-    }     
- ]
 
 
 app.get('/', function(req, res){
@@ -94,9 +62,12 @@ app.post('/users/add', function(req, res){
 	req.checkBody('matric_number', 'Matric Number is Required').notEmpty();
 	req.checkBody('level', 'Level is Required').notEmpty();
 	req.checkBody('email', 'Email is Required').notEmpty();
-
-	var errors = req.validationErrors();
-
+	req.checkBody('address', 'Address is Required').notEmpty();
+	req.checkBody('phone_number', 'Phone number is Required').notEmpty();
+    req.checkBody('courses_offered', 'Courses offered is Required').notEmpty();
+	
+	const errors = req.validationErrors();
+     db.users.find(function (err, users) {
 	if(errors){
         res.render('index', {
 		title: 'students',
@@ -104,12 +75,15 @@ app.post('/users/add', function(req, res){
 		errors: errors
 	});
 	} else {
-	var newUser = {
+	const newUser = {
 		first_name: req.body.first_name,
 		last_name: req.body.last_name,
 		matric_number: req.body.matric_number,
 		level: req.body.level,
-		email: req.body.email
+		email: req.body.email,
+		address: req.body.address,
+		phone_number: req.body.phone_number,
+		courses_offered: req.body.courses_offered
 	}
 
 db.users.insert(newUser, function(err, reult){
@@ -120,6 +94,7 @@ db.users.insert(newUser, function(err, reult){
 
 });
 }
+});
 });
 app.delete('/users/delete/:id', function(req, res){
 	db.users.remove({_id: ObjectId(req.params.id)}, function(err, result){
